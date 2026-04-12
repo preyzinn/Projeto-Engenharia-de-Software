@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head><title>Projeto: {{ project.name }}</title></head>
+<body>
+    <h1>Projeto: {{ project.name }}</h1>
+    <a href="{% url 'gerenciamento:dashboard' %}">Mural de Projetos</a>
+    <hr>
+
+    <p>Bem vindo ao projeto. Você tem acesso como: <strong>{{ project.access }}</strong>.</p>
+
+    <!-- Se voce for admin, pode aprovar solicitacoes de acesso de quem clicou na dashboard -->
+    {% if project.access == 'admin' %}
+        <h2>Solicitações de Acesso Pendentes</h2>
+        {% if requests %}
+            <ul>
+            {% for req in requests %}
+                <li>
+                    O usuário <strong>{{ req.user }}</strong> pediu acesso para este projeto.
+                    <form method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="approve">
+                        <input type="hidden" name="req_user" value="{{ req.user }}">
+                        <button type="submit">Aprovar e Adicionar à Equipe</button>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma solicitação pendente.</p>
+        {% endif %}
+    {% endif %}
+
+    <hr>
+    <h2>Quadro de Membros (Mockado)</h2>
+    <ul>
+        <li>você ({{ project.access }})</li>
+        <li>usuarioX (Member)</li>
+    </ul>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard Geral</title></head>
+<body>
+    <h1>Dashboard da Empresa</h1>
+    <a href="{% url 'gerenciamento:selecao_empresa' %}">Sair / Trocar de Empresa</a>
+    <hr>
+
+    <h2>Criar Projeto</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_project">
+        <label>Nome do Projeto: <input type="text" name="project_name" required></label>
+        <button type="submit">Criar</button>
+    </form>
+
+    <hr>
+
+    <h2>Projetos da Empresa</h2>
+    <ul>
+        {% for project in projects %}
+            <li>
+                <strong>{{ project.name }}</strong> (Admin: {{ project.admin }})
+                <br>
+                {% if project.access == 'admin' or project.access == 'member' %}
+                    <a href="{% url 'gerenciamento:detalhes_projeto' project.id %}"><button>Acessar Projeto</button></a>
+                {% else %}
+                    {% if project.requested %}
+                        <span>Solicitação de acesso enviada (aguardando aprovação).</span>
+                    {% else %}
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="request_access">
+                            <input type="hidden" name="project_id" value="{{ project.id }}">
+                            <button type="submit">Solicitar Acesso</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+</body>
+</html>

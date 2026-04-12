@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Empresa / Workspace</title></head>
+<body>
+    <h1>Escolha sua Empresa</h1>
+    
+    <h2>Criar Empresa</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create">
+        <label>Nome da Empresa: <input type="text" name="company_name" required></label>
+        <button type="submit">Criar</button>
+    </form>
+
+    <hr>
+
+    <h2>Entrar em Empresa Existente</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="enter">
+        <label>ID da Empresa / Convite: <input type="text" name="company_id" required></label>
+        <button type="submit">Entrar</button>
+    </form>
+</body>
+</html>
